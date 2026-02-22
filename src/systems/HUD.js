@@ -9,7 +9,7 @@ export class HUD {
     const vh = GAME.HEIGHT / (GAME.CAMERA_ZOOM || 1);  // ~400
 
     // Background bar
-    const bg = scene.add.rectangle(vw / 2, 14, vw, 28, 0xffffff, 0.6);
+    const bg = scene.add.rectangle(vw / 2, 14, vw, 28, 0x000000, 0.7);
     this.container.add(bg);
 
     // Lives display
@@ -24,8 +24,8 @@ export class HUD {
     this.scoreText = scene.add.text(vw / 2, 14, 'SCORE: 0', {
       fontSize: '12px',
       fontFamily: 'Arial, sans-serif',
-      fill: '#222222',
-      stroke: '#fff',
+      fill: '#ffffff',
+      stroke: '#000',
       strokeThickness: 2
     }).setOrigin(0.5);
     this.container.add(this.scoreText);
@@ -38,7 +38,7 @@ export class HUD {
     this.bossLabel = scene.add.text(vw / 2, 38, 'WEREWOLF', {
       fontSize: '7px',
       fontFamily: 'Arial, sans-serif',
-      fill: '#222222'
+      fill: '#ffffff'
     }).setOrigin(0.5);
     this.container.add(this.bossBarBg);
     this.container.add(this.bossBarFill);
@@ -50,7 +50,7 @@ export class HUD {
       fontSize: '8px',
       fontFamily: 'Arial, sans-serif',
       fill: COLORS.NEON_PINK,
-      stroke: '#fff',
+      stroke: '#000',
       strokeThickness: 2
     }).setOrigin(0.5);
     this.container.add(this.moonwalkText);
@@ -60,7 +60,7 @@ export class HUD {
       fontSize: '8px',
       fontFamily: 'Arial, sans-serif',
       fill: COLORS.NEON_BLUE,
-      stroke: '#fff',
+      stroke: '#000',
       strokeThickness: 2
     }).setOrigin(0.5);
     this.container.add(this.hatText);
@@ -69,8 +69,8 @@ export class HUD {
     this.muteText = scene.add.text(vw - 20, 14, '[M]', {
       fontSize: '8px',
       fontFamily: 'Arial, sans-serif',
-      fill: '#333333',
-      stroke: '#fff',
+      fill: '#cccccc',
+      stroke: '#000',
       strokeThickness: 2
     }).setOrigin(0.5).setInteractive({ useHandCursor: true });
     this.muteText.on('pointerdown', () => {
