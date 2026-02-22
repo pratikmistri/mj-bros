@@ -48,6 +48,18 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       quantity: 3
     });
     this.sparkleEmitter.stop();
+
+    // Stardust trail emitter for jumping
+    this.stardustEmitter = scene.add.particles(0, 0, 'stardust', {
+      speed: { min: 10, max: 40 },
+      angle: { min: 200, max: 340 },
+      scale: { start: 0.6, end: 0 },
+      alpha: { start: 0.8, end: 0 },
+      lifespan: 350,
+      frequency: 40,
+      quantity: 1
+    });
+    this.stardustEmitter.stop();
   }
 
   update(time) {
@@ -109,10 +121,15 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       if (!this.isThrowing) this.play('mj-jump', true);
       if (this.scene.game.soundManager) this.scene.game.soundManager.playJump();
       this.idleTime = 0;
+      this.stardustEmitter.start();
     }
 
-    if (!onGround && !this.isThrowing) {
-      this.play('mj-jump', true);
+    // Stardust trail while airborne
+    if (!onGround) {
+      this.stardustEmitter.setPosition(this.x, this.y + this.displayHeight / 2);
+      if (!this.isThrowing) this.play('mj-jump', true);
+    } else if (this.stardustEmitter.emitting) {
+      this.stardustEmitter.stop();
     }
 
     // Moonwalk trigger
@@ -138,8 +155,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.moonwalkTimer = PLAYER.MOONWALK_DURATION;
     this.moonwalkCooldown = PLAYER.MOONWALK_COOLDOWN;
 
-    // Moonwalk sprite faces left natively; flip to match player's facing direction
-    this.setFlipX(this.facingRight);
+    // Keep sprite facing the direction MJ was facing (slides backwards)
+    this.setFlipX(!this.facingRight);
     this.play('mj-moonwalk', true);
 
     // Moonwalk moves BACKWARDS (opposite of facing direction)

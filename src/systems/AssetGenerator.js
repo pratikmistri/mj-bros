@@ -54,28 +54,31 @@ export class AssetGenerator {
     }
     building.refresh();
 
-    // Fire escape platform
+    // Wood platform (replaces fire escape)
     const { tex: fireEscape, ctx: fCtx } = this.scaledCanvas('platform-fire-escape', 96, 16);
-    fCtx.fillStyle = COLORS.FIRE_ESCAPE;
+    // Base wood color
+    fCtx.fillStyle = '#b5651d';
     fCtx.fillRect(0, 0, 96, 16);
-    // Grating pattern
-    fCtx.strokeStyle = '#9999aa';
-    fCtx.lineWidth = 1;
-    for (let x = 0; x < 96; x += 6) {
+    // Wood grain lines
+    fCtx.strokeStyle = '#a0581a';
+    fCtx.lineWidth = 0.5;
+    for (let y = 3; y < 16; y += 4) {
       fCtx.beginPath();
-      fCtx.moveTo(x, 0);
-      fCtx.lineTo(x, 16);
+      fCtx.moveTo(0, y + Math.random() * 2);
+      fCtx.bezierCurveTo(24, y - 1, 48, y + 1, 72, y - 1);
+      fCtx.lineTo(96, y + Math.random() * 2);
       fCtx.stroke();
     }
-    for (let y = 0; y < 16; y += 6) {
-      fCtx.beginPath();
-      fCtx.moveTo(0, y);
-      fCtx.lineTo(96, y);
-      fCtx.stroke();
-    }
-    // Rails
-    fCtx.fillStyle = '#bbbbcc';
+    // Plank dividers (vertical nails/gaps)
+    fCtx.fillStyle = '#8b4513';
+    fCtx.fillRect(31, 0, 2, 16);
+    fCtx.fillRect(63, 0, 2, 16);
+    // Top highlight
+    fCtx.fillStyle = 'rgba(255,255,255,0.15)';
     fCtx.fillRect(0, 0, 96, 2);
+    // Bottom shadow
+    fCtx.fillStyle = 'rgba(0,0,0,0.15)';
+    fCtx.fillRect(0, 14, 96, 2);
     fireEscape.refresh();
 
     // Brick block
@@ -512,5 +515,14 @@ export class AssetGenerator {
     wsCtx.fillRect(1, 0, 2, 4);
     wsCtx.fillRect(0, 1, 4, 2);
     wSparkle.refresh();
+
+    // Stardust particle for jump trail
+    const { tex: stardust, ctx: sdCtx } = this.scaledCanvas('stardust', 6, 6);
+    sdCtx.fillStyle = '#fffbe6';
+    sdCtx.fillRect(2, 0, 2, 6);
+    sdCtx.fillRect(0, 2, 6, 2);
+    sdCtx.fillStyle = COLORS.GOLD;
+    sdCtx.fillRect(2, 2, 2, 2);
+    stardust.refresh();
   }
 }

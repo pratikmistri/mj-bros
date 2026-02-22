@@ -406,10 +406,10 @@ export class GameScene extends Phaser.Scene {
   }
 
   handleBrickCollision(player, brick) {
-    // Only break if player is moving upward and head is near brick bottom
+    // Only react when player hits from below
     if (player.body.velocity.y < 0 && player.body.top <= brick.body.bottom + 4) {
+      player.setVelocityY(50); // bounce player down
       this.breakBrick(brick);
-      player.setVelocityY(50);
     }
   }
 
@@ -464,6 +464,23 @@ export class GameScene extends Phaser.Scene {
 
     // Destroy the brick
     brick.destroy();
+  }
+
+  bumpBrick(brick) {
+    // Tween the brick up 8px then back — does not destroy
+    const origY = brick.y;
+    this.tweens.add({
+      targets: brick,
+      y: origY - 8,
+      duration: 80,
+      yoyo: true,
+      ease: 'Power1',
+      onComplete: () => {
+        brick.y = origY;
+        brick.refreshBody();
+      }
+    });
+    this.sfx.playBrickBreak(); // keep the sound as feedback
   }
 
   update(time, delta) {

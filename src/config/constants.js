@@ -87,7 +87,7 @@ export const COLORS = {
   BUILDING_DARK: '#8899aa',
   SKY_TOP: '#55aaee',
   SKY_BOTTOM: '#c8e8ff',
-  FIRE_ESCAPE: '#aaaabb',
+  FIRE_ESCAPE: '#b5651d',
   ZOMBIE_GREEN: '#4a7a3a',
   GHOST_WHITE: '#ddeeff',
   WEREWOLF_BROWN: '#6b4423'
