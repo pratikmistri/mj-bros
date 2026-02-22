@@ -1,0 +1,515 @@
+import { COLORS, ENEMIES, COLLECTIBLES } from '../config/constants.js';
+
+export class AssetGenerator {
+  constructor(scene) {
+    this.scene = scene;
+  }
+
+  generateAll() {
+    this.generatePlatforms();
+    this.generateBackgrounds();
+    this.generateEnemies();
+    this.generateCollectibles();
+    this.generateHUD();
+    this.generateEffects();
+    this.generateHat();
+  }
+
+  generatePlatforms() {
+    // Street platform
+    const street = this.scene.textures.createCanvas('platform-street', 128, 32);
+    const sCtx = street.getContext();
+    sCtx.fillStyle = COLORS.STREET_GRAY;
+    sCtx.fillRect(0, 0, 128, 32);
+    sCtx.fillStyle = '#888888';
+    sCtx.fillRect(0, 0, 128, 2);
+    sCtx.strokeStyle = '#ffffff';
+    sCtx.lineWidth = 2;
+    sCtx.setLineDash([12, 8]);
+    sCtx.beginPath();
+    sCtx.moveTo(0, 16);
+    sCtx.lineTo(128, 16);
+    sCtx.stroke();
+    street.refresh();
+
+    // Building rooftop platform
+    const building = this.scene.textures.createCanvas('platform-building', 128, 32);
+    const bCtx = building.getContext();
+    bCtx.fillStyle = COLORS.BUILDING_DARK;
+    bCtx.fillRect(0, 0, 128, 32);
+    bCtx.fillStyle = '#778899';
+    bCtx.fillRect(0, 0, 128, 4);
+    // Windows
+    for (let i = 0; i < 5; i++) {
+      bCtx.fillStyle = Math.random() > 0.5 ? '#99aabb' : '#778899';
+      bCtx.fillRect(8 + i * 24, 12, 8, 10);
+    }
+    building.refresh();
+
+    // Fire escape platform
+    const fireEscape = this.scene.textures.createCanvas('platform-fire-escape', 96, 16);
+    const fCtx = fireEscape.getContext();
+    fCtx.fillStyle = COLORS.FIRE_ESCAPE;
+    fCtx.fillRect(0, 0, 96, 16);
+    // Grating pattern
+    fCtx.strokeStyle = '#9999aa';
+    fCtx.lineWidth = 1;
+    for (let x = 0; x < 96; x += 6) {
+      fCtx.beginPath();
+      fCtx.moveTo(x, 0);
+      fCtx.lineTo(x, 16);
+      fCtx.stroke();
+    }
+    for (let y = 0; y < 16; y += 6) {
+      fCtx.beginPath();
+      fCtx.moveTo(0, y);
+      fCtx.lineTo(96, y);
+      fCtx.stroke();
+    }
+    // Rails
+    fCtx.fillStyle = '#bbbbcc';
+    fCtx.fillRect(0, 0, 96, 2);
+    fireEscape.refresh();
+
+    // Brick block
+    const brick = this.scene.textures.createCanvas('platform-brick', 64, 32);
+    const brCtx = brick.getContext();
+    // Base color
+    brCtx.fillStyle = '#8B4513';
+    brCtx.fillRect(0, 0, 64, 32);
+    // Mortar grid
+    brCtx.strokeStyle = '#D2B48C';
+    brCtx.lineWidth = 1;
+    for (let row = 0; row < 4; row++) {
+      const ry = row * 8;
+      brCtx.beginPath();
+      brCtx.moveTo(0, ry);
+      brCtx.lineTo(64, ry);
+      brCtx.stroke();
+      const offset = (row % 2) * 16;
+      for (let cx = offset; cx < 64; cx += 32) {
+        brCtx.beginPath();
+        brCtx.moveTo(cx, ry);
+        brCtx.lineTo(cx, ry + 8);
+        brCtx.stroke();
+      }
+    }
+    // Top highlight
+    brCtx.fillStyle = 'rgba(255,255,255,0.15)';
+    brCtx.fillRect(0, 0, 64, 2);
+    // Bottom shadow
+    brCtx.fillStyle = 'rgba(0,0,0,0.2)';
+    brCtx.fillRect(0, 30, 64, 2);
+    brick.refresh();
+
+    // Boss arena platform
+    const arena = this.scene.textures.createCanvas('platform-arena', 128, 32);
+    const aCtx = arena.getContext();
+    aCtx.fillStyle = '#6b4444';
+    aCtx.fillRect(0, 0, 128, 32);
+    aCtx.fillStyle = '#7b5555';
+    aCtx.fillRect(0, 0, 128, 4);
+    aCtx.fillStyle = '#88333333';
+    aCtx.fillRect(0, 28, 128, 4);
+    arena.refresh();
+  }
+
+  generateBackgrounds() {
+    // Daytime sky
+    const sky = this.scene.textures.createCanvas('bg-sky', 800, 600);
+    const skyCtx = sky.getContext();
+    const gradient = skyCtx.createLinearGradient(0, 0, 0, 600);
+    gradient.addColorStop(0, COLORS.SKY_TOP);
+    gradient.addColorStop(1, COLORS.SKY_BOTTOM);
+    skyCtx.fillStyle = gradient;
+    skyCtx.fillRect(0, 0, 800, 600);
+    // Sun
+    skyCtx.fillStyle = '#ffdd44';
+    skyCtx.beginPath();
+    skyCtx.arc(650, 80, 35, 0, Math.PI * 2);
+    skyCtx.fill();
+    skyCtx.fillStyle = '#ffee88';
+    skyCtx.beginPath();
+    skyCtx.arc(650, 80, 28, 0, Math.PI * 2);
+    skyCtx.fill();
+    // Clouds
+    skyCtx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+    skyCtx.beginPath();
+    skyCtx.ellipse(150, 120, 60, 20, 0, 0, Math.PI * 2);
+    skyCtx.fill();
+    skyCtx.beginPath();
+    skyCtx.ellipse(170, 110, 40, 16, 0, 0, Math.PI * 2);
+    skyCtx.fill();
+    skyCtx.beginPath();
+    skyCtx.ellipse(450, 80, 50, 18, 0, 0, Math.PI * 2);
+    skyCtx.fill();
+    skyCtx.beginPath();
+    skyCtx.ellipse(470, 70, 35, 14, 0, 0, Math.PI * 2);
+    skyCtx.fill();
+    skyCtx.beginPath();
+    skyCtx.ellipse(300, 180, 45, 15, 0, 0, Math.PI * 2);
+    skyCtx.fill();
+    sky.refresh();
+
+    // Building silhouettes (parallax layer)
+    const buildings = this.scene.textures.createCanvas('bg-buildings', 1600, 600);
+    const bgCtx = buildings.getContext();
+    bgCtx.clearRect(0, 0, 1600, 600);
+
+    const buildingData = [];
+    let bx = 0;
+    while (bx < 1600) {
+      const w = 60 + Math.random() * 100;
+      const h = 150 + Math.random() * 250;
+      buildingData.push({ x: bx, w, h });
+      bx += w + 15 + Math.random() * 30;
+    }
+
+    for (const b of buildingData) {
+      const gray = 140 + Math.random() * 40;
+      bgCtx.fillStyle = `rgb(${gray - 10}, ${gray}, ${gray + 10})`;
+      bgCtx.fillRect(b.x, 600 - b.h, b.w, b.h);
+      // Windows - reduced density
+      for (let wy = 600 - b.h + 15; wy < 580; wy += 24) {
+        for (let wx = b.x + 8; wx < b.x + b.w - 8; wx += 24) {
+          if (Math.random() > 0.6) {
+            const colors = ['#bbccdd', '#ccbbaa', '#aabbbb', '#cccccc'];
+            bgCtx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+            bgCtx.fillRect(wx, wy, 8, 10);
+          }
+        }
+      }
+    }
+    buildings.refresh();
+  }
+
+  generateEnemies() {
+    // Zombie spritesheet (4 frames, 32x48 each)
+    const zw = ENEMIES.ZOMBIE.WIDTH;
+    const zh = ENEMIES.ZOMBIE.HEIGHT;
+    const zombie = this.scene.textures.createCanvas('zombie', zw * 4, zh);
+    const zCtx = zombie.getContext();
+
+    for (let f = 0; f < 4; f++) {
+      const ox = f * zw;
+      const legOffset = f % 2 === 0 ? 0 : 3;
+      // Body
+      zCtx.fillStyle = COLORS.ZOMBIE_GREEN;
+      zCtx.fillRect(ox + 8, 10, 16, 18);
+      // Head
+      zCtx.fillStyle = '#5a8a4a';
+      zCtx.fillRect(ox + 10, 0, 12, 12);
+      // Eyes
+      zCtx.fillStyle = '#ff0000';
+      zCtx.fillRect(ox + 12, 3, 3, 3);
+      zCtx.fillRect(ox + 18, 3, 3, 3);
+      // Arms stretched out
+      zCtx.fillStyle = COLORS.ZOMBIE_GREEN;
+      zCtx.fillRect(ox + 2, 12 + (f % 2) * 2, 8, 4);
+      zCtx.fillRect(ox + 22, 14 - (f % 2) * 2, 8, 4);
+      // Legs
+      zCtx.fillStyle = '#3a5a2a';
+      zCtx.fillRect(ox + 10, 28, 5, 20 - legOffset);
+      zCtx.fillRect(ox + 17, 28, 5, 20 - (3 - legOffset));
+    }
+    zombie.refresh();
+
+    for (let f = 0; f < 4; f++) {
+      zombie.add(f, 0, f * zw, 0, zw, zh);
+    }
+
+    // Ghost spritesheet (2 frames, 32x36 each)
+    const gw = ENEMIES.GHOST.WIDTH;
+    const gh = ENEMIES.GHOST.HEIGHT;
+    const ghost = this.scene.textures.createCanvas('ghost', gw * 2, gh);
+    const gCtx = ghost.getContext();
+
+    for (let f = 0; f < 2; f++) {
+      const ox = f * gw;
+      // Body (translucent blob)
+      gCtx.fillStyle = f === 0 ? COLORS.GHOST_WHITE : 'rgba(200, 220, 240, 0.5)';
+      gCtx.beginPath();
+      gCtx.ellipse(ox + 16, 14, 14, 14, 0, 0, Math.PI * 2);
+      gCtx.fill();
+      // Wavy bottom
+      gCtx.beginPath();
+      gCtx.moveTo(ox + 2, 20);
+      gCtx.lineTo(ox + 2, 32);
+      gCtx.quadraticCurveTo(ox + 10, 26, ox + 16, 32);
+      gCtx.quadraticCurveTo(ox + 22, 26, ox + 30, 32);
+      gCtx.lineTo(ox + 30, 20);
+      gCtx.fill();
+      if (f === 0) {
+        // Eyes (visible/chasing)
+        gCtx.fillStyle = '#000';
+        gCtx.fillRect(ox + 10, 10, 5, 6);
+        gCtx.fillRect(ox + 19, 10, 5, 6);
+        // Mouth
+        gCtx.fillRect(ox + 12, 20, 8, 4);
+      }
+    }
+    ghost.refresh();
+
+    for (let f = 0; f < 2; f++) {
+      ghost.add(f, 0, f * gw, 0, gw, gh);
+    }
+
+    // Werewolf spritesheet (4 frames, 48x56 each)
+    const ww = ENEMIES.WEREWOLF.WIDTH;
+    const wh = ENEMIES.WEREWOLF.HEIGHT;
+    const werewolf = this.scene.textures.createCanvas('werewolf', ww * 4, wh);
+    const wCtx = werewolf.getContext();
+
+    for (let f = 0; f < 4; f++) {
+      const ox = f * ww;
+      const legOffset = f % 2 === 0 ? 0 : 4;
+      // Body
+      wCtx.fillStyle = COLORS.WEREWOLF_BROWN;
+      wCtx.fillRect(ox + 12, 14, 24, 22);
+      // Head
+      wCtx.fillStyle = '#7b5433';
+      wCtx.fillRect(ox + 14, 0, 20, 16);
+      // Ears
+      wCtx.fillStyle = '#8b6443';
+      wCtx.beginPath();
+      wCtx.moveTo(ox + 14, 4);
+      wCtx.lineTo(ox + 10, -2);
+      wCtx.lineTo(ox + 18, 2);
+      wCtx.fill();
+      wCtx.beginPath();
+      wCtx.moveTo(ox + 34, 4);
+      wCtx.lineTo(ox + 38, -2);
+      wCtx.lineTo(ox + 30, 2);
+      wCtx.fill();
+      // Eyes
+      wCtx.fillStyle = '#ffff00';
+      wCtx.fillRect(ox + 18, 5, 4, 4);
+      wCtx.fillRect(ox + 28, 5, 4, 4);
+      // Snout
+      wCtx.fillStyle = '#5a3413';
+      wCtx.fillRect(ox + 20, 10, 8, 5);
+      // Teeth
+      wCtx.fillStyle = '#ffffff';
+      wCtx.fillRect(ox + 22, 14, 2, 2);
+      wCtx.fillRect(ox + 26, 14, 2, 2);
+      // Arms
+      wCtx.fillStyle = COLORS.WEREWOLF_BROWN;
+      wCtx.fillRect(ox + 4, 16 + (f === 2 ? -4 : 0), 10, 6);
+      wCtx.fillRect(ox + 34, 18 + (f === 2 ? -4 : 0), 10, 6);
+      // Claws
+      wCtx.fillStyle = '#ffffff';
+      wCtx.fillRect(ox + 2, 16 + (f === 2 ? -4 : 0), 3, 2);
+      wCtx.fillRect(ox + 43, 18 + (f === 2 ? -4 : 0), 3, 2);
+      // Legs
+      wCtx.fillStyle = '#5a3413';
+      wCtx.fillRect(ox + 14, 36, 8, 20 - legOffset);
+      wCtx.fillRect(ox + 26, 36, 8, 20 - (4 - legOffset));
+    }
+    werewolf.refresh();
+
+    for (let f = 0; f < 4; f++) {
+      werewolf.add(f, 0, f * ww, 0, ww, wh);
+    }
+
+    // Shockwave
+    const shock = this.scene.textures.createCanvas('shockwave', 32, 16);
+    const shCtx = shock.getContext();
+    shCtx.fillStyle = '#ff440088';
+    shCtx.beginPath();
+    shCtx.ellipse(16, 12, 16, 8, 0, 0, Math.PI * 2);
+    shCtx.fill();
+    shCtx.fillStyle = '#ff880044';
+    shCtx.beginPath();
+    shCtx.ellipse(16, 12, 12, 5, 0, 0, Math.PI * 2);
+    shCtx.fill();
+    shock.refresh();
+  }
+
+  generateCollectibles() {
+    // Musical note (4 spin frames)
+    const nw = COLLECTIBLES.NOTE.WIDTH;
+    const nh = COLLECTIBLES.NOTE.HEIGHT;
+    const note = this.scene.textures.createCanvas('note', nw * 4, nh);
+    const nCtx = note.getContext();
+
+    for (let f = 0; f < 4; f++) {
+      const ox = f * nw;
+      const scaleX = Math.abs(Math.cos(f * Math.PI / 4)) * 0.6 + 0.4;
+      const cx = ox + nw / 2;
+
+      nCtx.fillStyle = COLORS.GOLD;
+      // Note head
+      nCtx.beginPath();
+      nCtx.ellipse(cx - 2 * scaleX, 18, 5 * scaleX, 4, 0, 0, Math.PI * 2);
+      nCtx.fill();
+      // Stem
+      nCtx.fillRect(cx + 2 * scaleX, 4, 2 * scaleX, 15);
+      // Flag
+      nCtx.beginPath();
+      nCtx.moveTo(cx + 2 * scaleX + 2 * scaleX, 4);
+      nCtx.quadraticCurveTo(cx + 10 * scaleX, 8, cx + 2 * scaleX + 2 * scaleX, 12);
+      nCtx.fill();
+    }
+    note.refresh();
+
+    for (let f = 0; f < 4; f++) {
+      note.add(f, 0, f * nw, 0, nw, nh);
+    }
+
+    // White glove
+    const glove = this.scene.textures.createCanvas('glove', COLLECTIBLES.GLOVE.WIDTH, COLLECTIBLES.GLOVE.HEIGHT);
+    const glCtx = glove.getContext();
+    glCtx.fillStyle = '#ffffff';
+    glCtx.beginPath();
+    glCtx.ellipse(12, 14, 10, 10, 0, 0, Math.PI * 2);
+    glCtx.fill();
+    // Fingers
+    glCtx.fillRect(4, 4, 4, 8);
+    glCtx.fillRect(9, 2, 4, 8);
+    glCtx.fillRect(14, 2, 4, 8);
+    glCtx.fillRect(19, 4, 4, 8);
+    // Sparkle
+    glCtx.fillStyle = COLORS.GOLD;
+    glCtx.fillRect(2, 2, 2, 2);
+    glCtx.fillRect(20, 0, 2, 2);
+    glove.refresh();
+
+    // Microphone
+    const mic = this.scene.textures.createCanvas('microphone', COLLECTIBLES.MICROPHONE.WIDTH, COLLECTIBLES.MICROPHONE.HEIGHT);
+    const mCtx = mic.getContext();
+    // Head
+    mCtx.fillStyle = '#cccccc';
+    mCtx.beginPath();
+    mCtx.ellipse(10, 8, 8, 8, 0, 0, Math.PI * 2);
+    mCtx.fill();
+    // Mesh
+    mCtx.strokeStyle = '#999999';
+    mCtx.lineWidth = 1;
+    for (let y = 2; y < 14; y += 3) {
+      mCtx.beginPath();
+      mCtx.moveTo(4, y);
+      mCtx.lineTo(16, y);
+      mCtx.stroke();
+    }
+    // Handle
+    mCtx.fillStyle = '#444444';
+    mCtx.fillRect(8, 14, 4, 16);
+    mCtx.fillStyle = '#666666';
+    mCtx.fillRect(7, 14, 6, 3);
+    mic.refresh();
+
+    // Sequined glove (star power-up)
+    const starGlove = this.scene.textures.createCanvas('star-glove', COLLECTIBLES.STAR_GLOVE.WIDTH, COLLECTIBLES.STAR_GLOVE.HEIGHT);
+    const sgCtx = starGlove.getContext();
+    // Glove base
+    sgCtx.fillStyle = '#ffffff';
+    sgCtx.beginPath();
+    sgCtx.ellipse(14, 16, 12, 12, 0, 0, Math.PI * 2);
+    sgCtx.fill();
+    // Sequins (sparkles)
+    const sparkleColors = [COLORS.NEON_PINK, COLORS.NEON_BLUE, COLORS.GOLD, COLORS.NEON_GREEN];
+    for (let i = 0; i < 12; i++) {
+      sgCtx.fillStyle = sparkleColors[i % sparkleColors.length];
+      const angle = (i / 12) * Math.PI * 2;
+      const r = 6 + Math.random() * 4;
+      sgCtx.fillRect(14 + Math.cos(angle) * r - 1, 16 + Math.sin(angle) * r - 1, 3, 3);
+    }
+    starGlove.refresh();
+  }
+
+  generateHat() {
+    // Spinning fedora hat (4 frames, 24x24 each)
+    const fw = 24;
+    const fh = 24;
+    const hat = this.scene.textures.createCanvas('hat', fw * 4, fh);
+    const hCtx = hat.getContext();
+
+    for (let f = 0; f < 4; f++) {
+      const ox = f * fw;
+      const cx = ox + fw / 2;
+      const cy = fh / 2;
+      const angle = (f / 4) * Math.PI * 2;
+      const scaleX = Math.cos(angle);
+      const absScale = Math.abs(scaleX) * 0.7 + 0.3;
+
+      // Hat brim
+      hCtx.fillStyle = '#1a1a1a';
+      hCtx.beginPath();
+      hCtx.ellipse(cx, cy + 3, 11 * absScale, 4, 0, 0, Math.PI * 2);
+      hCtx.fill();
+
+      // Hat crown
+      hCtx.fillStyle = '#222222';
+      hCtx.beginPath();
+      hCtx.ellipse(cx, cy - 2, 7 * absScale, 6, 0, 0, Math.PI * 2);
+      hCtx.fill();
+
+      // Top dent
+      hCtx.fillStyle = '#111111';
+      hCtx.beginPath();
+      hCtx.ellipse(cx, cy - 5, 4 * absScale, 2, 0, 0, Math.PI * 2);
+      hCtx.fill();
+
+      // Hat band
+      hCtx.fillStyle = '#888888';
+      hCtx.fillRect(cx - 7 * absScale, cy, 14 * absScale, 2);
+    }
+    hat.refresh();
+
+    for (let f = 0; f < 4; f++) {
+      hat.add(f, 0, f * fw, 0, fw, fh);
+    }
+  }
+
+  generateHUD() {
+    // Heart
+    const heart = this.scene.textures.createCanvas('heart', 16, 16);
+    const hCtx = heart.getContext();
+    hCtx.fillStyle = '#ff0000';
+    hCtx.beginPath();
+    hCtx.moveTo(8, 14);
+    hCtx.bezierCurveTo(0, 8, 0, 2, 4, 2);
+    hCtx.bezierCurveTo(6, 2, 8, 4, 8, 6);
+    hCtx.bezierCurveTo(8, 4, 10, 2, 12, 2);
+    hCtx.bezierCurveTo(16, 2, 16, 8, 8, 14);
+    hCtx.fill();
+    heart.refresh();
+
+    // Note icon for HUD
+    const noteIcon = this.scene.textures.createCanvas('note-icon', 12, 12);
+    const niCtx = noteIcon.getContext();
+    niCtx.fillStyle = COLORS.GOLD;
+    niCtx.beginPath();
+    niCtx.ellipse(4, 9, 3, 2.5, 0, 0, Math.PI * 2);
+    niCtx.fill();
+    niCtx.fillRect(6, 2, 2, 8);
+    niCtx.fillRect(6, 2, 5, 2);
+    noteIcon.refresh();
+  }
+
+  generateEffects() {
+    // Sparkle particle
+    const sparkle = this.scene.textures.createCanvas('sparkle', 4, 4);
+    const spCtx = sparkle.getContext();
+    spCtx.fillStyle = COLORS.GOLD;
+    spCtx.fillRect(0, 0, 4, 4);
+    sparkle.refresh();
+
+    // Brick particle for destruction debris
+    const brickParticle = this.scene.textures.createCanvas('brick-particle', 6, 6);
+    const bpCtx = brickParticle.getContext();
+    bpCtx.fillStyle = '#8B4513';
+    bpCtx.fillRect(0, 0, 6, 6);
+    bpCtx.fillStyle = '#A0522D';
+    bpCtx.fillRect(1, 1, 4, 4);
+    brickParticle.refresh();
+
+    // White sparkle for moonwalk
+    const wSparkle = this.scene.textures.createCanvas('sparkle-white', 4, 4);
+    const wsCtx = wSparkle.getContext();
+    wsCtx.fillStyle = '#ffffff';
+    wsCtx.fillRect(1, 0, 2, 4);
+    wsCtx.fillRect(0, 1, 4, 2);
+    wSparkle.refresh();
+  }
+}
