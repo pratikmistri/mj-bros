@@ -3,10 +3,12 @@ import { GAME, COLORS } from '../config/constants.js';
 export class HUD {
   constructor(scene) {
     this.scene = scene;
-    this.container = scene.add.container(0, 0).setScrollFactor(0).setDepth(100);
+    const zoom = GAME.CAMERA_ZOOM || 1;
+    const vw = GAME.WIDTH / zoom;   // ~533
+    const vh = GAME.HEIGHT / zoom;  // ~400
 
-    const vw = GAME.WIDTH / (GAME.CAMERA_ZOOM || 1);  // ~533
-    const vh = GAME.HEIGHT / (GAME.CAMERA_ZOOM || 1);  // ~400
+    // Offset container by half viewport to compensate for camera origin (0.5, 0.5)
+    this.container = scene.add.container(-vw / 2, -vh / 2).setScrollFactor(0).setDepth(100);
 
     // Background bar
     const bg = scene.add.rectangle(vw / 2, 14, vw, 28, 0x000000, 0.7);
