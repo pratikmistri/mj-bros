@@ -68,7 +68,8 @@ export class GameOverScene extends Phaser.Scene {
     }
 
     // Restart instruction
-    const restartText = this.add.text(GAME.WIDTH / 2, 520, 'Press SPACE to Play Again', {
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const restartText = this.add.text(GAME.WIDTH / 2, 520, isTouch ? 'Tap to Play Again' : 'Press SPACE to Play Again', {
       fontSize: '24px',
       fontFamily: 'Arial, sans-serif',
       fill: '#222222',
@@ -85,8 +86,8 @@ export class GameOverScene extends Phaser.Scene {
       ease: 'Sine.easeInOut'
     });
 
-    this.input.keyboard.once('keydown-SPACE', () => {
-      this.scene.start('MenuScene');
-    });
+    const restart = () => this.scene.start('MenuScene');
+    this.input.keyboard.once('keydown-SPACE', restart);
+    this.input.once('pointerdown', restart);
   }
 }

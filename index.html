@@ -2,12 +2,89 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>MJ Bros - Moonwalk Boulevard</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { width: 100%; height: 100%; background: #000; overflow: hidden; }
-    canvas { display: block; }
+    html, body { width: 100%; height: 100%; background: #000; overflow: hidden; overscroll-behavior: none; }
+    canvas { display: block; touch-action: none; }
+
+    /* CRT retro monitor effect — scanlines (wiggle) + vignette */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0px,
+          transparent 3px,
+          rgba(0, 0, 0, 0.15) 3px,
+          rgba(0, 0, 0, 0.15) 4px
+        ),
+        radial-gradient(
+          ellipse at center,
+          transparent 60%,
+          rgba(0, 0, 0, 0.4) 100%
+        );
+      animation: scanline-wiggle 0.12s steps(1) infinite;
+    }
+
+    @keyframes scanline-wiggle {
+      0%   { background-position: 0px 0px, 0 0; }
+      25%  { background-position: 1px 0px, 0 0; }
+      50%  { background-position: -1px 1px, 0 0; }
+      75%  { background-position: 2px 0px, 0 0; }
+      100% { background-position: 0px -1px, 0 0; }
+    }
+
+    /* Film grain noise overlay — old film projector look */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: -50%;
+      width: 200%;
+      height: 200%;
+      z-index: 998;
+      pointer-events: none;
+      opacity: 0.06;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      animation: film-grain 0.08s steps(1) infinite;
+    }
+
+    @keyframes film-grain {
+      0%   { transform: translate(0, 0); }
+      10%  { transform: translate(-2%, -3%); }
+      20%  { transform: translate(3%, 1%); }
+      30%  { transform: translate(-1%, 4%); }
+      40%  { transform: translate(4%, -2%); }
+      50%  { transform: translate(-3%, 2%); }
+      60%  { transform: translate(1%, -4%); }
+      70%  { transform: translate(-4%, 3%); }
+      80%  { transform: translate(2%, -1%); }
+      90%  { transform: translate(-2%, -3%); }
+      100% { transform: translate(3%, 1%); }
+    }
+
+    /* Gentle CRT flicker — rare, subtle brightness dips */
+    canvas {
+      animation: crt-flicker 8s infinite;
+    }
+
+    @keyframes crt-flicker {
+      0%    { opacity: 1; filter: brightness(1); }
+      24%   { opacity: 1; filter: brightness(1); }
+      25%   { opacity: 0.985; filter: brightness(0.985); }
+      26%   { opacity: 1; filter: brightness(1.005); }
+      27%   { opacity: 1; filter: brightness(1); }
+      74%   { opacity: 1; filter: brightness(1); }
+      75%   { opacity: 0.99; filter: brightness(0.99); }
+      76%   { opacity: 0.985; filter: brightness(0.985); }
+      77%   { opacity: 1; filter: brightness(1); }
+      100%  { opacity: 1; filter: brightness(1); }
+    }
   </style>
 </head>
 <body>

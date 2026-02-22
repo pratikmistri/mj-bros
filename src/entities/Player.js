@@ -1,4 +1,5 @@
 import { PLAYER } from '../config/constants.js';
+import VirtualInput from '../systems/VirtualInput.js';
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y) {
@@ -78,13 +79,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     // Movement
     const onGround = this.body.blocked.down || this.body.touching.down;
 
-    if (this.cursors.left.isDown) {
+    if (this.cursors.left.isDown || VirtualInput.left) {
       this.setVelocityX(-PLAYER.SPEED);
       this.facingRight = false;
       this.setFlipX(true);
       if (onGround && !this.isThrowing) this.play('mj-walk', true);
       this.idleTime = 0;
-    } else if (this.cursors.right.isDown) {
+    } else if (this.cursors.right.isDown || VirtualInput.right) {
       this.setVelocityX(PLAYER.SPEED);
       this.facingRight = true;
       this.setFlipX(false);
@@ -103,7 +104,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     // Jump
-    if ((this.cursors.up.isDown || this.cursors.space.isDown || this.jumpKey.isDown) && onGround) {
+    if ((this.cursors.up.isDown || this.cursors.space.isDown || this.jumpKey.isDown || VirtualInput.jump) && onGround) {
       this.setVelocityY(PLAYER.JUMP_VELOCITY);
       if (!this.isThrowing) this.play('mj-jump', true);
       if (this.scene.game.soundManager) this.scene.game.soundManager.playJump();
@@ -115,13 +116,17 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     // Moonwalk trigger
-    if (Phaser.Input.Keyboard.JustDown(this.moonwalkKey) && onGround && this.moonwalkCooldown <= 0) {
+    const virtualMoonwalk = VirtualInput.moonwalk;
+    if (virtualMoonwalk) VirtualInput.moonwalk = false;
+    if ((Phaser.Input.Keyboard.JustDown(this.moonwalkKey) || virtualMoonwalk) && onGround && this.moonwalkCooldown <= 0) {
       this.idleTime = 0;
       this.startMoonwalk();
     }
 
     // Hat throw trigger
-    if (Phaser.Input.Keyboard.JustDown(this.throwKey) && onGround && this.throwCooldown <= 0 && !this.isThrowing) {
+    const virtualThrow = VirtualInput.throwHat;
+    if (virtualThrow) VirtualInput.throwHat = false;
+    if ((Phaser.Input.Keyboard.JustDown(this.throwKey) || virtualThrow) && onGround && this.throwCooldown <= 0 && !this.isThrowing) {
       this.idleTime = 0;
       this.throwHat();
     }

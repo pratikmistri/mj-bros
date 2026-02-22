@@ -5,6 +5,7 @@ import { Ghost } from '../entities/Ghost.js';
 import { Werewolf } from '../entities/Werewolf.js';
 import { LevelBuilder } from '../systems/LevelBuilder.js';
 import { HUD } from '../systems/HUD.js';
+import { TouchControls } from '../systems/TouchControls.js';
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -60,6 +61,13 @@ export class GameScene extends Phaser.Scene {
 
     // HUD
     this.hud = new HUD(this);
+
+    // Touch controls
+    this.touchControls = new TouchControls();
+    this.touchControls.init();
+    this.events.on('shutdown', () => {
+      if (this.touchControls) this.touchControls.destroy();
+    });
 
     // Boss defeated event
     this.events.on('bossDefeated', this.onBossDefeated, this);

@@ -45,7 +45,8 @@ export class MenuScene extends Phaser.Scene {
     });
 
     // Start instruction
-    const startText = this.add.text(GAME.WIDTH / 2, 480, 'Press SPACE to Start', {
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const startText = this.add.text(GAME.WIDTH / 2, 480, isTouch ? 'Tap to Start' : 'Press SPACE to Start', {
       fontSize: '28px',
       fontFamily: 'Arial, sans-serif',
       fill: '#222222',
@@ -70,9 +71,11 @@ export class MenuScene extends Phaser.Scene {
     }).setOrigin(0.5);
 
     // Input
-    this.input.keyboard.once('keydown-SPACE', () => {
+    const startGame = () => {
       this.game.soundManager.resume();
       this.scene.start('GameScene');
-    });
+    };
+    this.input.keyboard.once('keydown-SPACE', startGame);
+    this.input.once('pointerdown', startGame);
   }
 }
