@@ -50,6 +50,10 @@ export class BootScene extends Phaser.Scene {
       frameWidth: PLAYER.FRAME_WIDTH,
       frameHeight: PLAYER.FRAME_HEIGHT
     });
+    this.load.spritesheet('mj-moonwalk-sheet', 'moonwalk.png', {
+      frameWidth: PLAYER.FRAME_WIDTH,
+      frameHeight: PLAYER.FRAME_HEIGHT
+    });
   }
 
   create() {

@@ -7,7 +7,7 @@ export class Werewolf extends Phaser.Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
 
     this.setScale(ENEMIES.WEREWOLF.SCALE);
-    this.body.setSize(ENEMIES.WEREWOLF.WIDTH - 8, ENEMIES.WEREWOLF.HEIGHT - 4);
+    this.body.setSize((ENEMIES.WEREWOLF.WIDTH - 8) * 2, (ENEMIES.WEREWOLF.HEIGHT - 4) * 2);
     this.setBounce(0);
     this.setCollideWorldBounds(false);
 
@@ -93,6 +93,7 @@ export class Werewolf extends Phaser.Physics.Arcade.Sprite {
 
   createShockwave(dir) {
     const shockwave = this.scene.physics.add.sprite(this.x, this.y + 20, 'shockwave');
+    shockwave.setScale(0.5);
     shockwave.body.setAllowGravity(false);
     shockwave.setVelocityX(dir * ENEMIES.WEREWOLF.SHOCKWAVE_SPEED);
     shockwave.setDepth(5);
@@ -145,8 +146,8 @@ export class Werewolf extends Phaser.Physics.Arcade.Sprite {
       targets: this,
       alpha: 0,
       angle: 720,
-      scaleX: 0.1,
-      scaleY: 0.1,
+      scaleX: 0.05,
+      scaleY: 0.05,
       duration: 1000,
       onComplete: () => {
         this.scene.events.emit('bossDefeated');

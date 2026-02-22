@@ -42,7 +42,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.sparkleEmitter = scene.add.particles(0, 0, 'sparkle-white', {
       speed: { min: 20, max: 60 },
       angle: { min: 0, max: 360 },
-      scale: { start: 1, end: 0 },
+      scale: { start: 0.5, end: 0 },
       lifespan: 400,
       frequency: -1,
       quantity: 3
@@ -137,6 +137,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.isMoonwalking = true;
     this.moonwalkTimer = PLAYER.MOONWALK_DURATION;
     this.moonwalkCooldown = PLAYER.MOONWALK_COOLDOWN;
+
+    // Moonwalk sprite faces left natively; flip to match player's facing direction
+    this.setFlipX(this.facingRight);
     this.play('mj-moonwalk', true);
 
     // Moonwalk moves BACKWARDS (opposite of facing direction)
@@ -184,6 +187,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   stopMoonwalk() {
     this.isMoonwalking = false;
     this.setVelocityX(0);
+    // Restore normal flipX convention (main sprite faces right natively)
+    this.setFlipX(!this.facingRight);
     this.sparkleEmitter.stop();
   }
 

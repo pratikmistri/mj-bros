@@ -41,6 +41,7 @@ export class GameScene extends Phaser.Scene {
     // Camera
     this.cameras.main.setBounds(0, 0, GAME.WORLD_WIDTH, GAME.WORLD_HEIGHT);
     this.cameras.main.startFollow(this.player, true, 0.1, 0.1);
+    this.cameras.main.setZoom(GAME.CAMERA_ZOOM);
 
 
     // Create collectibles
@@ -168,7 +169,7 @@ export class GameScene extends Phaser.Scene {
     const particles = this.add.particles(x, y, 'sparkle', {
       speed: { min: 50, max: 150 },
       angle: { min: 0, max: 360 },
-      scale: { start: 1.5, end: 0 },
+      scale: { start: 0.75, end: 0 },
       lifespan: 400,
       quantity: 8
     });
@@ -197,6 +198,7 @@ export class GameScene extends Phaser.Scene {
     if (this.activeHat) return;
 
     const hat = this.physics.add.sprite(x + direction * 20, y - 10, 'hat', 0);
+    hat.setScale(0.35);
     hat.play('hat-spin');
     hat.setDepth(5);
     hat.body.setAllowGravity(false);
@@ -421,7 +423,7 @@ export class GameScene extends Phaser.Scene {
       speed: { min: 80, max: 200 },
       angle: { min: 200, max: 340 },
       gravityY: 400,
-      scale: { start: 1.5, end: 0.5 },
+      scale: { start: 0.75, end: 0.25 },
       lifespan: 800,
       quantity: 12
     });
@@ -434,8 +436,9 @@ export class GameScene extends Phaser.Scene {
     for (let i = 0; i < noteCount; i++) {
       this.time.delayedCall(i * 60, () => {
         const note = this.notes.create(bx, by - 10, 'note', 0);
+        note.setScale(0.5);
         note.play('note-spin');
-        note.body.setSize(20, 20);
+        note.body.setSize(40, 40);
         note.body.setAllowGravity(true);
         note.setVelocityY(Phaser.Math.Between(-250, -150));
         note.setVelocityX(Phaser.Math.Between(-100, 100));

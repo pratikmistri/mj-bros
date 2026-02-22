@@ -3,6 +3,14 @@ import { COLORS, ENEMIES, COLLECTIBLES } from '../config/constants.js';
 export class AssetGenerator {
   constructor(scene) {
     this.scene = scene;
+    this.S = 2;
+  }
+
+  scaledCanvas(key, w, h) {
+    const tex = this.scene.textures.createCanvas(key, w * this.S, h * this.S);
+    const ctx = tex.getContext();
+    ctx.scale(this.S, this.S);
+    return { tex, ctx };
   }
 
   generateAll() {
@@ -16,9 +24,10 @@ export class AssetGenerator {
   }
 
   generatePlatforms() {
+    const S = this.S;
+
     // Street platform
-    const street = this.scene.textures.createCanvas('platform-street', 128, 32);
-    const sCtx = street.getContext();
+    const { tex: street, ctx: sCtx } = this.scaledCanvas('platform-street', 128, 32);
     sCtx.fillStyle = COLORS.STREET_GRAY;
     sCtx.fillRect(0, 0, 128, 32);
     sCtx.fillStyle = '#888888';
@@ -33,8 +42,7 @@ export class AssetGenerator {
     street.refresh();
 
     // Building rooftop platform
-    const building = this.scene.textures.createCanvas('platform-building', 128, 32);
-    const bCtx = building.getContext();
+    const { tex: building, ctx: bCtx } = this.scaledCanvas('platform-building', 128, 32);
     bCtx.fillStyle = COLORS.BUILDING_DARK;
     bCtx.fillRect(0, 0, 128, 32);
     bCtx.fillStyle = '#778899';
@@ -47,8 +55,7 @@ export class AssetGenerator {
     building.refresh();
 
     // Fire escape platform
-    const fireEscape = this.scene.textures.createCanvas('platform-fire-escape', 96, 16);
-    const fCtx = fireEscape.getContext();
+    const { tex: fireEscape, ctx: fCtx } = this.scaledCanvas('platform-fire-escape', 96, 16);
     fCtx.fillStyle = COLORS.FIRE_ESCAPE;
     fCtx.fillRect(0, 0, 96, 16);
     // Grating pattern
@@ -72,8 +79,7 @@ export class AssetGenerator {
     fireEscape.refresh();
 
     // Brick block
-    const brick = this.scene.textures.createCanvas('platform-brick', 64, 32);
-    const brCtx = brick.getContext();
+    const { tex: brick, ctx: brCtx } = this.scaledCanvas('platform-brick', 64, 32);
     // Base color
     brCtx.fillStyle = '#8B4513';
     brCtx.fillRect(0, 0, 64, 32);
@@ -103,8 +109,7 @@ export class AssetGenerator {
     brick.refresh();
 
     // Boss arena platform
-    const arena = this.scene.textures.createCanvas('platform-arena', 128, 32);
-    const aCtx = arena.getContext();
+    const { tex: arena, ctx: aCtx } = this.scaledCanvas('platform-arena', 128, 32);
     aCtx.fillStyle = '#6b4444';
     aCtx.fillRect(0, 0, 128, 32);
     aCtx.fillStyle = '#7b5555';
@@ -115,9 +120,10 @@ export class AssetGenerator {
   }
 
   generateBackgrounds() {
+    const S = this.S;
+
     // Daytime sky
-    const sky = this.scene.textures.createCanvas('bg-sky', 800, 600);
-    const skyCtx = sky.getContext();
+    const { tex: sky, ctx: skyCtx } = this.scaledCanvas('bg-sky', 800, 600);
     const gradient = skyCtx.createLinearGradient(0, 0, 0, 600);
     gradient.addColorStop(0, COLORS.SKY_TOP);
     gradient.addColorStop(1, COLORS.SKY_BOTTOM);
@@ -152,8 +158,7 @@ export class AssetGenerator {
     sky.refresh();
 
     // Building silhouettes (parallax layer)
-    const buildings = this.scene.textures.createCanvas('bg-buildings', 1600, 600);
-    const bgCtx = buildings.getContext();
+    const { tex: buildings, ctx: bgCtx } = this.scaledCanvas('bg-buildings', 1600, 600);
     bgCtx.clearRect(0, 0, 1600, 600);
 
     const buildingData = [];
@@ -184,11 +189,12 @@ export class AssetGenerator {
   }
 
   generateEnemies() {
+    const S = this.S;
+
     // Zombie spritesheet (4 frames, 32x48 each)
     const zw = ENEMIES.ZOMBIE.WIDTH;
     const zh = ENEMIES.ZOMBIE.HEIGHT;
-    const zombie = this.scene.textures.createCanvas('zombie', zw * 4, zh);
-    const zCtx = zombie.getContext();
+    const { tex: zombie, ctx: zCtx } = this.scaledCanvas('zombie', zw * 4, zh);
 
     for (let f = 0; f < 4; f++) {
       const ox = f * zw;
@@ -215,14 +221,13 @@ export class AssetGenerator {
     zombie.refresh();
 
     for (let f = 0; f < 4; f++) {
-      zombie.add(f, 0, f * zw, 0, zw, zh);
+      zombie.add(f, 0, f * zw * S, 0, zw * S, zh * S);
     }
 
     // Ghost spritesheet (2 frames, 32x36 each)
     const gw = ENEMIES.GHOST.WIDTH;
     const gh = ENEMIES.GHOST.HEIGHT;
-    const ghost = this.scene.textures.createCanvas('ghost', gw * 2, gh);
-    const gCtx = ghost.getContext();
+    const { tex: ghost, ctx: gCtx } = this.scaledCanvas('ghost', gw * 2, gh);
 
     for (let f = 0; f < 2; f++) {
       const ox = f * gw;
@@ -251,14 +256,13 @@ export class AssetGenerator {
     ghost.refresh();
 
     for (let f = 0; f < 2; f++) {
-      ghost.add(f, 0, f * gw, 0, gw, gh);
+      ghost.add(f, 0, f * gw * S, 0, gw * S, gh * S);
     }
 
     // Werewolf spritesheet (4 frames, 48x56 each)
     const ww = ENEMIES.WEREWOLF.WIDTH;
     const wh = ENEMIES.WEREWOLF.HEIGHT;
-    const werewolf = this.scene.textures.createCanvas('werewolf', ww * 4, wh);
-    const wCtx = werewolf.getContext();
+    const { tex: werewolf, ctx: wCtx } = this.scaledCanvas('werewolf', ww * 4, wh);
 
     for (let f = 0; f < 4; f++) {
       const ox = f * ww;
@@ -308,12 +312,11 @@ export class AssetGenerator {
     werewolf.refresh();
 
     for (let f = 0; f < 4; f++) {
-      werewolf.add(f, 0, f * ww, 0, ww, wh);
+      werewolf.add(f, 0, f * ww * S, 0, ww * S, wh * S);
     }
 
     // Shockwave
-    const shock = this.scene.textures.createCanvas('shockwave', 32, 16);
-    const shCtx = shock.getContext();
+    const { tex: shock, ctx: shCtx } = this.scaledCanvas('shockwave', 32, 16);
     shCtx.fillStyle = '#ff440088';
     shCtx.beginPath();
     shCtx.ellipse(16, 12, 16, 8, 0, 0, Math.PI * 2);
@@ -326,11 +329,12 @@ export class AssetGenerator {
   }
 
   generateCollectibles() {
+    const S = this.S;
+
     // Musical note (4 spin frames)
     const nw = COLLECTIBLES.NOTE.WIDTH;
     const nh = COLLECTIBLES.NOTE.HEIGHT;
-    const note = this.scene.textures.createCanvas('note', nw * 4, nh);
-    const nCtx = note.getContext();
+    const { tex: note, ctx: nCtx } = this.scaledCanvas('note', nw * 4, nh);
 
     for (let f = 0; f < 4; f++) {
       const ox = f * nw;
@@ -353,12 +357,11 @@ export class AssetGenerator {
     note.refresh();
 
     for (let f = 0; f < 4; f++) {
-      note.add(f, 0, f * nw, 0, nw, nh);
+      note.add(f, 0, f * nw * S, 0, nw * S, nh * S);
     }
 
     // White glove
-    const glove = this.scene.textures.createCanvas('glove', COLLECTIBLES.GLOVE.WIDTH, COLLECTIBLES.GLOVE.HEIGHT);
-    const glCtx = glove.getContext();
+    const { tex: glove, ctx: glCtx } = this.scaledCanvas('glove', COLLECTIBLES.GLOVE.WIDTH, COLLECTIBLES.GLOVE.HEIGHT);
     glCtx.fillStyle = '#ffffff';
     glCtx.beginPath();
     glCtx.ellipse(12, 14, 10, 10, 0, 0, Math.PI * 2);
@@ -375,8 +378,7 @@ export class AssetGenerator {
     glove.refresh();
 
     // Microphone
-    const mic = this.scene.textures.createCanvas('microphone', COLLECTIBLES.MICROPHONE.WIDTH, COLLECTIBLES.MICROPHONE.HEIGHT);
-    const mCtx = mic.getContext();
+    const { tex: mic, ctx: mCtx } = this.scaledCanvas('microphone', COLLECTIBLES.MICROPHONE.WIDTH, COLLECTIBLES.MICROPHONE.HEIGHT);
     // Head
     mCtx.fillStyle = '#cccccc';
     mCtx.beginPath();
@@ -399,8 +401,7 @@ export class AssetGenerator {
     mic.refresh();
 
     // Sequined glove (star power-up)
-    const starGlove = this.scene.textures.createCanvas('star-glove', COLLECTIBLES.STAR_GLOVE.WIDTH, COLLECTIBLES.STAR_GLOVE.HEIGHT);
-    const sgCtx = starGlove.getContext();
+    const { tex: starGlove, ctx: sgCtx } = this.scaledCanvas('star-glove', COLLECTIBLES.STAR_GLOVE.WIDTH, COLLECTIBLES.STAR_GLOVE.HEIGHT);
     // Glove base
     sgCtx.fillStyle = '#ffffff';
     sgCtx.beginPath();
@@ -418,11 +419,12 @@ export class AssetGenerator {
   }
 
   generateHat() {
+    const S = this.S;
+
     // Spinning fedora hat (4 frames, 24x24 each)
     const fw = 24;
     const fh = 24;
-    const hat = this.scene.textures.createCanvas('hat', fw * 4, fh);
-    const hCtx = hat.getContext();
+    const { tex: hat, ctx: hCtx } = this.scaledCanvas('hat', fw * 4, fh);
 
     for (let f = 0; f < 4; f++) {
       const ox = f * fw;
@@ -457,14 +459,15 @@ export class AssetGenerator {
     hat.refresh();
 
     for (let f = 0; f < 4; f++) {
-      hat.add(f, 0, f * fw, 0, fw, fh);
+      hat.add(f, 0, f * fw * S, 0, fw * S, fh * S);
     }
   }
 
   generateHUD() {
+    const S = this.S;
+
     // Heart
-    const heart = this.scene.textures.createCanvas('heart', 16, 16);
-    const hCtx = heart.getContext();
+    const { tex: heart, ctx: hCtx } = this.scaledCanvas('heart', 16, 16);
     hCtx.fillStyle = '#ff0000';
     hCtx.beginPath();
     hCtx.moveTo(8, 14);
@@ -476,8 +479,7 @@ export class AssetGenerator {
     heart.refresh();
 
     // Note icon for HUD
-    const noteIcon = this.scene.textures.createCanvas('note-icon', 12, 12);
-    const niCtx = noteIcon.getContext();
+    const { tex: noteIcon, ctx: niCtx } = this.scaledCanvas('note-icon', 12, 12);
     niCtx.fillStyle = COLORS.GOLD;
     niCtx.beginPath();
     niCtx.ellipse(4, 9, 3, 2.5, 0, 0, Math.PI * 2);
@@ -488,16 +490,16 @@ export class AssetGenerator {
   }
 
   generateEffects() {
+    const S = this.S;
+
     // Sparkle particle
-    const sparkle = this.scene.textures.createCanvas('sparkle', 4, 4);
-    const spCtx = sparkle.getContext();
+    const { tex: sparkle, ctx: spCtx } = this.scaledCanvas('sparkle', 4, 4);
     spCtx.fillStyle = COLORS.GOLD;
     spCtx.fillRect(0, 0, 4, 4);
     sparkle.refresh();
 
     // Brick particle for destruction debris
-    const brickParticle = this.scene.textures.createCanvas('brick-particle', 6, 6);
-    const bpCtx = brickParticle.getContext();
+    const { tex: brickParticle, ctx: bpCtx } = this.scaledCanvas('brick-particle', 6, 6);
     bpCtx.fillStyle = '#8B4513';
     bpCtx.fillRect(0, 0, 6, 6);
     bpCtx.fillStyle = '#A0522D';
@@ -505,8 +507,7 @@ export class AssetGenerator {
     brickParticle.refresh();
 
     // White sparkle for moonwalk
-    const wSparkle = this.scene.textures.createCanvas('sparkle-white', 4, 4);
-    const wsCtx = wSparkle.getContext();
+    const { tex: wSparkle, ctx: wsCtx } = this.scaledCanvas('sparkle-white', 4, 4);
     wsCtx.fillStyle = '#ffffff';
     wsCtx.fillRect(1, 0, 2, 4);
     wsCtx.fillRect(0, 1, 4, 2);

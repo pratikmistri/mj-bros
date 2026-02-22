@@ -5,21 +5,24 @@ export class HUD {
     this.scene = scene;
     this.container = scene.add.container(0, 0).setScrollFactor(0).setDepth(100);
 
+    const vw = GAME.WIDTH / (GAME.CAMERA_ZOOM || 1);  // ~533
+    const vh = GAME.HEIGHT / (GAME.CAMERA_ZOOM || 1);  // ~400
+
     // Background bar
-    const bg = scene.add.rectangle(GAME.WIDTH / 2, 20, GAME.WIDTH, 40, 0xffffff, 0.6);
+    const bg = scene.add.rectangle(vw / 2, 14, vw, 28, 0xffffff, 0.6);
     this.container.add(bg);
 
     // Lives display
     this.hearts = [];
     for (let i = 0; i < 3; i++) {
-      const heart = scene.add.image(30 + i * 22, 20, 'heart').setScale(1);
+      const heart = scene.add.image(20 + i * 15, 14, 'heart').setScale(0.5);
       this.hearts.push(heart);
       this.container.add(heart);
     }
 
     // Score display
-    this.scoreText = scene.add.text(GAME.WIDTH / 2, 20, 'SCORE: 0', {
-      fontSize: '18px',
+    this.scoreText = scene.add.text(vw / 2, 14, 'SCORE: 0', {
+      fontSize: '12px',
       fontFamily: 'Arial, sans-serif',
       fill: '#222222',
       stroke: '#fff',
@@ -28,12 +31,12 @@ export class HUD {
     this.container.add(this.scoreText);
 
     // Boss HP bar (hidden initially)
-    this.bossBarBg = scene.add.rectangle(GAME.WIDTH / 2, 55, 200, 12, 0x333333, 0.8);
-    this.bossBarFill = scene.add.rectangle(GAME.WIDTH / 2, 55, 200, 12, 0xff0000, 1);
+    this.bossBarBg = scene.add.rectangle(vw / 2, 38, 133, 8, 0x333333, 0.8);
+    this.bossBarFill = scene.add.rectangle(vw / 2, 38, 133, 8, 0xff0000, 1);
     this.bossBarBg.setOrigin(0.5);
     this.bossBarFill.setOrigin(0.5);
-    this.bossLabel = scene.add.text(GAME.WIDTH / 2, 55, 'WEREWOLF', {
-      fontSize: '10px',
+    this.bossLabel = scene.add.text(vw / 2, 38, 'WEREWOLF', {
+      fontSize: '7px',
       fontFamily: 'Arial, sans-serif',
       fill: '#222222'
     }).setOrigin(0.5);
@@ -43,8 +46,8 @@ export class HUD {
     this.hideBossBar();
 
     // Moonwalk cooldown indicator
-    this.moonwalkText = scene.add.text(GAME.WIDTH - 120, 20, '[X] MOONWALK', {
-      fontSize: '12px',
+    this.moonwalkText = scene.add.text(vw - 80, 14, '[X] MOONWALK', {
+      fontSize: '8px',
       fontFamily: 'Arial, sans-serif',
       fill: COLORS.NEON_PINK,
       stroke: '#fff',
@@ -53,8 +56,8 @@ export class HUD {
     this.container.add(this.moonwalkText);
 
     // Hat throw indicator
-    this.hatText = scene.add.text(GAME.WIDTH - 210, 20, '[C] HAT', {
-      fontSize: '12px',
+    this.hatText = scene.add.text(vw - 140, 14, '[C] HAT', {
+      fontSize: '8px',
       fontFamily: 'Arial, sans-serif',
       fill: COLORS.NEON_BLUE,
       stroke: '#fff',
@@ -63,8 +66,8 @@ export class HUD {
     this.container.add(this.hatText);
 
     // Mute button
-    this.muteText = scene.add.text(GAME.WIDTH - 30, 20, '[M]', {
-      fontSize: '12px',
+    this.muteText = scene.add.text(vw - 20, 14, '[M]', {
+      fontSize: '8px',
       fontFamily: 'Arial, sans-serif',
       fill: '#333333',
       stroke: '#fff',

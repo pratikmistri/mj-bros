@@ -7,7 +7,7 @@ export class Zombie extends Phaser.Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
 
     this.setScale(ENEMIES.ZOMBIE.SCALE);
-    this.body.setSize(ENEMIES.ZOMBIE.WIDTH - 4, ENEMIES.ZOMBIE.HEIGHT - 4);
+    this.body.setSize((ENEMIES.ZOMBIE.WIDTH - 4) * 2, (ENEMIES.ZOMBIE.HEIGHT - 4) * 2);
     this.setBounce(0);
     this.setCollideWorldBounds(false);
 

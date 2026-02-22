@@ -4,7 +4,9 @@ export const GAME = {
   WORLD_WIDTH: 6400,
   WORLD_HEIGHT: 600,
   GRAVITY: 800,
-  BG_COLOR: '#87ceeb'
+  BG_COLOR: '#87ceeb',
+  CAMERA_ZOOM: 1.5,
+  ASSET_SCALE: 2
 };
 
 export const PLAYER = {
@@ -41,7 +43,7 @@ export const ENEMIES = {
     SPEED: 60,
     WIDTH: 32,
     HEIGHT: 48,
-    SCALE: 1,
+    SCALE: 0.5,
     SCORE: 200
   },
   GHOST: {
@@ -49,7 +51,7 @@ export const ENEMIES = {
     CHASE_DISTANCE: 250,
     WIDTH: 32,
     HEIGHT: 36,
-    SCALE: 1,
+    SCALE: 0.5,
     SCORE: 300
   },
   WEREWOLF: {
@@ -58,7 +60,7 @@ export const ENEMIES = {
     LUNGE_SPEED: 250,
     WIDTH: 48,
     HEIGHT: 56,
-    SCALE: 1,
+    SCALE: 0.5,
     HP: 5,
     SCORE: 2000,
     PHASE2_HP: 3,

@@ -7,7 +7,7 @@ export class Ghost extends Phaser.Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
 
     this.setScale(ENEMIES.GHOST.SCALE);
-    this.body.setSize(ENEMIES.GHOST.WIDTH - 4, ENEMIES.GHOST.HEIGHT - 4);
+    this.body.setSize((ENEMIES.GHOST.WIDTH - 4) * 2, (ENEMIES.GHOST.HEIGHT - 4) * 2);
     this.body.setAllowGravity(false);
     this.setCollideWorldBounds(false);
 
@@ -74,7 +74,7 @@ export class Ghost extends Phaser.Physics.Arcade.Sprite {
     this.scene.tweens.add({
       targets: this,
       alpha: 0,
-      scale: 0.1,
+      scale: 0.05,
       duration: 500,
       onComplete: () => this.destroy()
     });

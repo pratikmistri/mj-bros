@@ -35,9 +35,9 @@ export function createAnimations(scene) {
 
   scene.anims.create({
     key: 'mj-moonwalk',
-    frames: [{ key: 'mj', frame: 7 }],
-    frameRate: 1,
-    repeat: 0
+    frames: scene.anims.generateFrameNumbers('mj-moonwalk-sheet', { start: 0, end: 6 }),
+    frameRate: 10,
+    repeat: -1
   });
 
   scene.anims.create({

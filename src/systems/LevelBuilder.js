@@ -178,12 +178,13 @@ export class LevelBuilder {
   }
 
   createBackgrounds() {
-    // Static sky (doesn't scroll)
-    this.scene.add.image(400, 300, 'bg-sky').setScrollFactor(0).setDepth(-10);
+    // Static sky (doesn't scroll) — 2x texture at 0.5 scale
+    this.scene.add.image(267, 200, 'bg-sky').setScale(0.5).setScrollFactor(0).setDepth(-10);
 
-    // Parallax building silhouettes
+    // Parallax building silhouettes — 2x texture at 0.5 scale
     for (let i = 0; i < 4; i++) {
-      this.scene.add.image(800 + i * 1600, 300, 'bg-buildings')
+      this.scene.add.image(400 + i * 800, 300, 'bg-buildings')
+        .setScale(0.5)
         .setScrollFactor(0.3)
         .setDepth(-5);
     }
@@ -217,13 +218,16 @@ export class LevelBuilder {
   createTiledPlatform(x, y, totalWidth, height, textureKey) {
     // Get the texture width to tile properly
     const tex = this.scene.textures.get(textureKey);
-    const tileWidth = tex.getSourceImage().width;
+    const rawWidth = tex.getSourceImage().width;
+    // 2x textures displayed at 0.5 scale
+    const displayWidth = rawWidth / 2;
 
     let placed = 0;
     while (placed < totalWidth) {
-      const plat = this.scene.platforms.create(x + placed + tileWidth / 2, y, textureKey);
+      const plat = this.scene.platforms.create(x + placed + displayWidth / 2, y, textureKey);
+      plat.setScale(0.5);
       plat.refreshBody();
-      placed += tileWidth;
+      placed += displayWidth;
     }
   }
 
@@ -231,6 +235,7 @@ export class LevelBuilder {
     this.scene.bricks = this.scene.physics.add.staticGroup();
     for (const b of LEVEL_DATA.bricks) {
       const brick = this.scene.bricks.create(b.x, b.y, 'platform-brick');
+      brick.setScale(0.5);
       brick.setData('notes', b.notes);
       brick.refreshBody();
     }
@@ -265,15 +270,17 @@ export class LevelBuilder {
     scene.notes = scene.physics.add.group({ allowGravity: false });
     for (const n of LEVEL_DATA.notes) {
       const note = scene.notes.create(n.x, n.y, 'note', 0);
+      note.setScale(0.5);
       note.play('note-spin');
-      note.body.setSize(20, 20);
+      note.body.setSize(40, 40);
     }
 
     // White gloves
     scene.gloveCollectibles = scene.physics.add.group({ allowGravity: false });
     for (const g of LEVEL_DATA.gloves) {
       const glove = scene.gloveCollectibles.create(g.x, g.y, 'glove');
-      glove.body.setSize(20, 20);
+      glove.setScale(0.5);
+      glove.body.setSize(40, 40);
       scene.tweens.add({
         targets: glove,
         y: g.y - 5,
@@ -288,7 +295,8 @@ export class LevelBuilder {
     scene.microphoneCollectibles = scene.physics.add.group({ allowGravity: false });
     for (const m of LEVEL_DATA.microphones) {
       const mic = scene.microphoneCollectibles.create(m.x, m.y, 'microphone');
-      mic.body.setSize(16, 28);
+      mic.setScale(0.5);
+      mic.body.setSize(32, 56);
       scene.tweens.add({
         targets: mic,
         y: m.y - 8,
@@ -303,7 +311,8 @@ export class LevelBuilder {
     scene.starGloveCollectibles = scene.physics.add.group({ allowGravity: false });
     for (const s of LEVEL_DATA.starGloves) {
       const sg = scene.starGloveCollectibles.create(s.x, s.y, 'star-glove');
-      sg.body.setSize(24, 24);
+      sg.setScale(0.5);
+      sg.body.setSize(48, 48);
       scene.tweens.add({
         targets: sg,
         y: s.y - 10,
